@@ -5,10 +5,20 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const mongoose     = require('mongoose');
+const mongoose  = require('mongoose');
+const config =require('./config/config');
+
+// Session and Passport modules
+const session = require("express-session");
+const passport = require("./config/passport-config");  // passport module setup and initial load
+const passportStrategySetup = require('./config/passport-local-strategy');
+
+
 
 const indexRouter = require('./routes/index');
 const passportRouter = require("./routes/passportRouter");
+
+
 
 mongoose
   .connect('mongodb://localhost/passport-auth', {useNewUrlParser: true})
@@ -31,8 +41,29 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+app.use(session({
+  secret: config.SESSION_KEY,
+  resave: false,
+  saveUninitialized: false
+}));
+
+
+// PASSPORT LINES MUST BE BELOW SESSION
+
+//	Auth Setup - how is the user being authenticated during login
+passport.use(passportStrategySetup);
+
+// Creates Passport's methods and properties on `req` for use in out routes
+app.use(passport.initialize());
+
+// Invokes / Sets Passport to manage user session
+app.use(passport.session());
+
+
+
 app.use('/', indexRouter);
-app.use('/', passportRouter);
+app.use('/passport', passportRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
