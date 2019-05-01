@@ -24,21 +24,15 @@ git push origin master
 
 ## Introductions
 
-The starter-code provides the basic layout and organization for this assignment.
+The code provides the basic layout and organization for this assignment.
 
 ### Iteration 0 | Initialize the project
 
-After forking and cloning the project, you will have to add a `starter_code/.env` file:
-
-```
-PORT=3000
-```
-
-And you have to install all the dependencies:
+After forking and cloning the project, you have to install all the dependencies:
 
 
 ```sh
-$ cd starter_code
+$ cd lab-authentication-with-passport
 $ npm install
 ```
 
